@@ -1,6 +1,7 @@
 package com.scholr.scholr_paltform.applications.interfaces.rest;
 
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetDataApoderadoByApoderadoIdAndDataApoderadoIdQuery;
+import com.scholr.scholr_paltform.applications.domain.model.queries.GetDataApoderadoByApoderadoIdQuery;
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetDataApoderadoByIdQuery;
 import com.scholr.scholr_paltform.applications.domain.model.valueobjects.Contacto;
 import com.scholr.scholr_paltform.applications.domain.model.valueobjects.CuentaBancaria;
@@ -94,6 +95,29 @@ public class DataApoderadosController {
     }
 
     //hacer update de data apoderado por id de usuario
+    @PutMapping("/{apoderadoId}")
+    public ResponseEntity<DataApoderadoResource> updateDataApoderadoByApoderadoId(@PathVariable Long apoderadoId, @RequestBody DataApoderadoResource resource){
+        var updateDataApoderadoCommand = UpdateDataApoderadoCommandFromResourceAssembler.toCommandFromResource(apoderadoId, resource);
+        var optionalDataApoderado = this.dataApoderadosCommandService.handle(updateDataApoderadoCommand);
 
+        if (optionalDataApoderado.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        var dataApoderadoResource = DataApoderadoResourceFromEntityAssembler.toResourceFromEntity(optionalDataApoderado.get());
+        return ResponseEntity.ok(dataApoderadoResource);
+    }
+
+    //get data apoderado by apoderado id
+    @GetMapping("/{apoderadoId}")
+    public ResponseEntity<DataApoderadoResource> getDataApoderadoByApoderadoId(@PathVariable Long apoderadoId){
+        var getDataApoderadoByApoderadoIdQuery = new GetDataApoderadoByApoderadoIdQuery(apoderadoId);
+        var optionalDataApoderado = this.dataApoderadosQueryService.handle(getDataApoderadoByApoderadoIdQuery);
+
+        if (optionalDataApoderado.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        var dataApoderadoResource = DataApoderadoResourceFromEntityAssembler.toResourceFromEntity(optionalDataApoderado.get());
+        return ResponseEntity.ok(dataApoderadoResource);
+    }
 
 }
