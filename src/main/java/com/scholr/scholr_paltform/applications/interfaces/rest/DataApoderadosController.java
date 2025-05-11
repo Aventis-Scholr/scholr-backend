@@ -2,6 +2,10 @@ package com.scholr.scholr_paltform.applications.interfaces.rest;
 
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetDataApoderadoByApoderadoIdAndDataApoderadoIdQuery;
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetDataApoderadoByIdQuery;
+import com.scholr.scholr_paltform.applications.domain.model.valueobjects.Contacto;
+import com.scholr.scholr_paltform.applications.domain.model.valueobjects.CuentaBancaria;
+import com.scholr.scholr_paltform.applications.domain.model.valueobjects.Domicilio;
+import com.scholr.scholr_paltform.applications.domain.model.valueobjects.InformacionLaboral;
 import com.scholr.scholr_paltform.applications.domain.services.DataApoderadoCommandService;
 import com.scholr.scholr_paltform.applications.domain.services.DataApoderadoQueryService;
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.CreateDataApoderadoResource;
@@ -14,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 @RestController
@@ -31,10 +37,10 @@ public class DataApoderadosController {
 
 
     //crear data apoderado
-    @PostMapping
-    public ResponseEntity<DataApoderadoResource> createDataApoderado(@RequestBody CreateDataApoderadoResource resource){
-        var createDataApoderadoCommand = CreateDataApoderadoCommandFromResourceAssembler.toCommandFromResource(resource);
-        var dataApoderadoId = this.dataApoderadosCommandService.handle(createDataApoderadoCommand);
+    @PostMapping("/{apoderadoId}")
+    public ResponseEntity<DataApoderadoResource> createDataApoderado(@PathVariable Long apoderadoId,@RequestBody CreateDataApoderadoResource resource){
+        var createDataApoderadoCommand = CreateDataApoderadoCommandFromResourceAssembler.toCommandFromResource(apoderadoId, resource);
+                var dataApoderadoId = this.dataApoderadosCommandService.handle(createDataApoderadoCommand);
 
         if (dataApoderadoId.equals(0L)) {
             return ResponseEntity.badRequest().build();
@@ -59,7 +65,6 @@ public class DataApoderadosController {
         var dataApoderadoResource = DataApoderadoResourceFromEntityAssembler.toResourceFromEntity(optionalDataApoderado.get());
         return ResponseEntity.ok(dataApoderadoResource);
     }
-
 
     //modificar data apoderado por id
     @PutMapping("/{id}")

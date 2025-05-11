@@ -8,8 +8,6 @@ import com.scholr.scholr_paltform.applications.domain.model.valueobjects.Informa
 import java.util.Date;
 
 public record DataApoderadoResource(
-        Long id,
-        Long apoderadoId,
         String nombres,
         String apellidos,
         int dni,

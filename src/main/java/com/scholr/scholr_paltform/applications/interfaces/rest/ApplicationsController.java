@@ -79,6 +79,7 @@ public class ApplicationsController {
     }
 
     //getApplicationById
+    /*
     @GetMapping("/{id}")
     public ResponseEntity<ApplicationResource> getApplicationById(@PathVariable Long id) {
         var getApplicationByIdQuery = new GetApplicationByIdQuery(id);
@@ -87,5 +88,34 @@ public class ApplicationsController {
             return ResponseEntity.badRequest().build();
         var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
         return ResponseEntity.ok(applicationResource);
-    }
+    }*/
+
+    /*@PostMapping
+    public ResponseEntity<ApplicationResource> createApplication(@RequestBody CreateApplicationResource resource) {
+        // Crear la aplicación
+        var createApplicationCommand = CreateApplicationCommandFromResourceAssembler.toCommandFromResource(resource);
+        var applicationId = this.applicationsCommandService.handle(createApplicationCommand);
+
+        if (applicationId.equals(0L)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // Crear el postulante asociado
+        var createPostulanteCommand = new CreatePostulanteCommand(
+                resource.postulante().getNombres(),
+                resource.postulante().getApellidos(),
+                resource.postulante().getDni(),
+                resource.postulante().getFechaNacimiento(),
+                resource.postulante().getContacto(),
+                resource.postulante().getCentroEstudios()
+        );
+        this.applicationsCommandService.handle(createPostulanteCommand);
+
+        // Obtener la aplicación creada
+        var getApplicationByIdQuery = new GetApplicationByIdQuery(applicationId);
+        var optionalApplication = this.applicationsQueryService.handle(getApplicationByIdQuery);
+
+        var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
+        return new ResponseEntity<>(applicationResource, HttpStatus.CREATED);
+    }*/
 }

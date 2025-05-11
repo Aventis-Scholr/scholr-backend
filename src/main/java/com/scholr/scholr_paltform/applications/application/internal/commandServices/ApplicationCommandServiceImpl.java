@@ -2,8 +2,10 @@ package com.scholr.scholr_paltform.applications.application.internal.commandServ
 
 import com.scholr.scholr_paltform.applications.domain.model.aggregates.Application;
 import com.scholr.scholr_paltform.applications.domain.model.commands.CreateApplicationCommand;
+import com.scholr.scholr_paltform.applications.domain.model.commands.CreatePostulanteCommand;
 import com.scholr.scholr_paltform.applications.domain.model.commands.DeleteApplicationCommand;
 import com.scholr.scholr_paltform.applications.domain.model.commands.UpdateApplicationCommand;
+import com.scholr.scholr_paltform.applications.domain.model.entities.Postulante;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
 import com.scholr.scholr_paltform.applications.infrastructure.persistence.jpa.repositories.ApplicationRepository;
 import org.springframework.stereotype.Service;
@@ -60,5 +62,32 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
             throw new IllegalArgumentException("Error while deleting application: " + e.getMessage());
         }
     }
+
+
+    //creacion de postulante
+    // Creación de postulante
+    /*@Override
+    public Long handle(CreatePostulanteCommand command) {
+        // Buscar la aplicación asociada
+        var applicationOptional = this.applicationRepository.findById(command.getApplicationId());
+        if (applicationOptional.isEmpty()) {
+            throw new IllegalArgumentException("Application not found for ID: " + command.getApplicationId());
+        }
+
+        var application = applicationOptional.get();
+
+        // Crear y agregar el postulante al agregado Application
+        var postulante = new Postulante(command);
+        application.addPostulante(postulante);
+
+        try {
+            // Guardar el agregado completo
+            this.applicationRepository.save(application);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error while saving application with postulante: " + e.getMessage());
+        }
+
+        return postulante.getId();
+    }*/
 }
 

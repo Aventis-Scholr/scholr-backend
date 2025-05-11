@@ -10,9 +10,9 @@ import com.scholr.scholr_paltform.applications.interfaces.rest.resources.CreateD
 import java.util.Date;
 
 public class CreateDataApoderadoCommandFromResourceAssembler {
-    public static CreateDataApoderadoCommand toCommandFromResource(CreateDataApoderadoResource resource){
+    public static CreateDataApoderadoCommand toCommandFromResource(Long apoderadoId, CreateDataApoderadoResource resource){
         return new CreateDataApoderadoCommand(
-                resource.apoderadoId(),
+                apoderadoId,
                 resource.nombres(),
                 resource.apellidos(),
                 resource.dni(),

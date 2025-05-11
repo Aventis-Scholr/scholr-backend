@@ -6,7 +6,7 @@ import com.scholr.scholr_paltform.applications.interfaces.rest.resources.Postula
 public class PostulanteResourceFromEntityAssembler {
     public static PostulanteResource toResourceFromEntity(Postulante entity) {
         return new PostulanteResource(
-                entity.getId(),
+                //entity.getId(),
                 entity.getNombres(),
                 entity.getApellidos(),
                 entity.getDni(),

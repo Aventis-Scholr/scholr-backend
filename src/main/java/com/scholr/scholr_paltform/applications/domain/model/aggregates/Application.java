@@ -25,7 +25,9 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
 
     private TipoBeca tipoBeca;
 
-    @ManyToOne
+    //@ManyToOne
+    //vamos a usar como value object
+    @Embedded
     private Postulante postulante;
 
     public Application() {}

@@ -6,7 +6,7 @@ import com.scholr.scholr_paltform.applications.domain.model.valueobjects.Contact
 import java.util.Date;
 
 public record PostulanteResource(
-        Long id,
+        //Long id,
         String nombres,
         String apellidos,
         int dni,
