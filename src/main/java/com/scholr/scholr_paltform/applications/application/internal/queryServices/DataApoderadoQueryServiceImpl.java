@@ -6,9 +6,11 @@ import com.scholr.scholr_paltform.applications.domain.model.queries.GetDataApode
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetDataApoderadoByIdQuery;
 import com.scholr.scholr_paltform.applications.domain.services.DataApoderadoQueryService;
 import com.scholr.scholr_paltform.applications.infrastructure.persistence.jpa.repositories.DataApoderadoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class DataApoderadoQueryServiceImpl implements DataApoderadoQueryService {
     private final DataApoderadoRepository dataApoderadoQueryRepository;
 
@@ -28,6 +30,6 @@ public class DataApoderadoQueryServiceImpl implements DataApoderadoQueryService 
 
     @Override
     public Optional<DataApoderado> handle(GetDataApoderadoByApoderadoIdAndDataApoderadoIdQuery query) {
-        return this.dataApoderadoQueryRepository.findByApoderadoIdAndDataApoderadoId(query.apoderadoId(), query.dataApoderadoId());
+        return this.dataApoderadoQueryRepository.findByApoderadoIdAndId(query.apoderadoId(), query.dataApoderadoId());
     }
 }

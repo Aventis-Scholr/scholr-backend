@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface DataApoderadoRepository extends JpaRepository<DataApoderado, Long> {
     Optional<DataApoderado> findByApoderadoId(Long aLong);
 
-    Optional<DataApoderado> findByApoderadoIdAndDataApoderadoId(Long aLong, Long aLong1);
+    Optional<DataApoderado> findByApoderadoIdAndId(Long aLong, Long aLong1);
     //restricciones
 
 }

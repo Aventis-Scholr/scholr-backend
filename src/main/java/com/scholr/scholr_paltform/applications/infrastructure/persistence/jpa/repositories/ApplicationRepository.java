@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     //restricciones
-    List<Application> findByApoderadoId(Long apoderadoId);
+    List<Application> findByIdApoderado(Long idApoderado);
 }
