@@ -1,4 +1,4 @@
 package com.scholr.scholr_paltform.applications.domain.model.queries;
 
-public record GetDataApoderadoByApoderadoId(Long apoderadoId) {
+public record GetDataApoderadoByApoderadoIdQuery(Long apoderadoId) {
 }
