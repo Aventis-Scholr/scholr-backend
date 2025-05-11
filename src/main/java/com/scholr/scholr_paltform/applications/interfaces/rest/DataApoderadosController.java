@@ -1,5 +1,6 @@
 package com.scholr.scholr_paltform.applications.interfaces.rest;
 
+import com.scholr.scholr_paltform.applications.domain.model.queries.GetDataApoderadoByApoderadoIdAndDataApoderadoIdQuery;
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetDataApoderadoByIdQuery;
 import com.scholr.scholr_paltform.applications.domain.services.DataApoderadoCommandService;
 import com.scholr.scholr_paltform.applications.domain.services.DataApoderadoQueryService;
@@ -72,9 +73,22 @@ public class DataApoderadosController {
         return ResponseEntity.ok(dataApoderadoResource);
     }
 
-    //agregando el id del usuario---------
+    //agregando el id del usuario (apoderado) ---------
 
     //obtener data apoderado por id de usuario
+    @GetMapping("/{apoderadoId}/{id}")
+    public ResponseEntity<DataApoderadoResource> getDataApoderadoApoderadoIdAndId(@PathVariable Long apoderadoId, @PathVariable Long id){
+        var getDataApoderadoByApoderadoIdAndId = new GetDataApoderadoByApoderadoIdAndDataApoderadoIdQuery(apoderadoId, id);
+        var optionalDataApoderado = this.dataApoderadosQueryService.handle(getDataApoderadoByApoderadoIdAndId);
+
+        if (optionalDataApoderado.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        var dataApoderadoResource = DataApoderadoResourceFromEntityAssembler.toResourceFromEntity(optionalDataApoderado.get());
+        return ResponseEntity.ok(dataApoderadoResource);
+    }
+
+    //hacer update de data apoderado por id de usuario
 
 
 }
