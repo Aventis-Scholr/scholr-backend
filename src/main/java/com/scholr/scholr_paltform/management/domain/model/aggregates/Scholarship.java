@@ -1,6 +1,7 @@
 package com.scholr.scholr_paltform.management.domain.model.aggregates;
 
 import com.scholr.scholr_paltform.management.domain.model.commands.CreateScholarshipCommand;
+import com.scholr.scholr_paltform.management.domain.model.commands.UpdateScholarshipCommand;
 import com.scholr.scholr_paltform.management.domain.model.valueobjects.Requirement;
 import com.scholr.scholr_paltform.management.domain.model.valueobjects.ScholarshipStatus;
 import com.scholr.scholr_paltform.management.domain.model.valueobjects.ScholarshipType;
@@ -50,5 +51,23 @@ public class Scholarship extends AuditableAbstractAggregateRoot<Scholarship> {
         this.coordinatorId = command.coordinatorId();
     }
 
-
+    public void updateFromCommand(UpdateScholarshipCommand command) {
+        // Actualiza solo los campos permitidos (según la lógica del negocio)
+        if (command.name() != null) {
+            this.name = command.name();
+        }
+        if (command.requirements() != null) {
+            this.requirements = command.requirements();
+        }
+        if (command.scholarshipType() != null) {
+            this.scholarshipType = command.scholarshipType();
+        }
+        if (command.scholarshipStatus() != null) {
+            this.scholarshipStatus = command.scholarshipStatus();
+        }
+        if (command.coordinatorId() != null) {
+            this.coordinatorId = command.coordinatorId();
+        }
+        // El campo 'companyName' no se actualiza según lo indicado
+    }
 }
