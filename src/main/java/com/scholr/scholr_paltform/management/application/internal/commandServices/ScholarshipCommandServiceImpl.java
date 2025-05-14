@@ -6,9 +6,11 @@ import com.scholr.scholr_paltform.management.domain.model.commands.DeleteScholar
 import com.scholr.scholr_paltform.management.domain.model.commands.UpdateScholarshipCommand;
 import com.scholr.scholr_paltform.management.domain.services.ScholarshipCommandService;
 import com.scholr.scholr_paltform.management.infrastructure.persistence.jpa.repositories.ScholarshipRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class ScholarshipCommandServiceImpl implements ScholarshipCommandService {
     private final ScholarshipRepository scholarshipRepository;
 
