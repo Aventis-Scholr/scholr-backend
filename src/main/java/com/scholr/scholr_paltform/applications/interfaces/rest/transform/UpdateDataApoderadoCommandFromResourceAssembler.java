@@ -5,7 +5,7 @@ import com.scholr.scholr_paltform.applications.interfaces.rest.resources.DataApo
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.UpdateDataApoderadoResource;
 
 public class UpdateDataApoderadoCommandFromResourceAssembler {
-    public static UpdateDataApoderadoCommand toCommandFromResource(Long id, DataApoderadoResource resource) {
+    public static UpdateDataApoderadoCommand toCommandFromResource(Long id, UpdateDataApoderadoResource resource) {
         return new UpdateDataApoderadoCommand(
                 id,
                 resource.nombres(),

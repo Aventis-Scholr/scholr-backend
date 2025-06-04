@@ -6,6 +6,7 @@ import com.scholr.scholr_paltform.applications.interfaces.rest.resources.DataApo
 public class DataApoderadoResourceFromEntityAssembler {
     public static DataApoderadoResource toResourceFromEntity(DataApoderado entity) {
         return new DataApoderadoResource(
+                entity.getId(),
                 entity.getNombres(),
                 entity.getApellidos(),
                 entity.getDni(),
