@@ -11,6 +11,7 @@ import com.scholr.scholr_paltform.applications.domain.services.DataApoderadoComm
 import com.scholr.scholr_paltform.applications.domain.services.DataApoderadoQueryService;
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.CreateDataApoderadoResource;
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.DataApoderadoResource;
+import com.scholr.scholr_paltform.applications.interfaces.rest.resources.UpdateDataApoderadoResource;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.CreateDataApoderadoCommandFromResourceAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.DataApoderadoResourceFromEntityAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.UpdateDataApoderadoCommandFromResourceAssembler;
@@ -68,8 +69,8 @@ public class DataApoderadosController {
     }
 
     //modificar data apoderado por id
-    @PutMapping("/{id}")
-    public ResponseEntity<DataApoderadoResource> updateDataApoderado(@PathVariable Long id, @RequestBody DataApoderadoResource resource){
+    @PutMapping("/put/{id}")
+    public ResponseEntity<DataApoderadoResource> updateDataApoderado(@PathVariable Long id, @RequestBody UpdateDataApoderadoResource resource){
         var updateDataApoderadoCommand = UpdateDataApoderadoCommandFromResourceAssembler.toCommandFromResource(id, resource);
         var optionalDataApoderado = this.dataApoderadosCommandService.handle(updateDataApoderadoCommand);
 
@@ -95,8 +96,8 @@ public class DataApoderadosController {
     }
 
     //hacer update de data apoderado por id de usuario
-    @PutMapping("/{apoderadoId}")
-    public ResponseEntity<DataApoderadoResource> updateDataApoderadoByApoderadoId(@PathVariable Long apoderadoId, @RequestBody DataApoderadoResource resource){
+    @PutMapping("/put/apoderado/{apoderadoId}")
+    public ResponseEntity<DataApoderadoResource> updateDataApoderadoByApoderadoId(@PathVariable Long apoderadoId, @RequestBody UpdateDataApoderadoResource resource){
         var updateDataApoderadoCommand = UpdateDataApoderadoCommandFromResourceAssembler.toCommandFromResource(apoderadoId, resource);
         var optionalDataApoderado = this.dataApoderadosCommandService.handle(updateDataApoderadoCommand);
 
@@ -108,7 +109,7 @@ public class DataApoderadosController {
     }
 
     //get data apoderado by apoderado id
-    @GetMapping("/{apoderadoId}")
+    @GetMapping("/apoderado/{apoderadoId}")
     public ResponseEntity<DataApoderadoResource> getDataApoderadoByApoderadoId(@PathVariable Long apoderadoId){
         var getDataApoderadoByApoderadoIdQuery = new GetDataApoderadoByApoderadoIdQuery(apoderadoId);
         var optionalDataApoderado = this.dataApoderadosQueryService.handle(getDataApoderadoByApoderadoIdQuery);

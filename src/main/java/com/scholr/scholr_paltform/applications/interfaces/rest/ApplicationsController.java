@@ -1,16 +1,16 @@
 package com.scholr.scholr_paltform.applications.interfaces.rest;
 
 import com.scholr.scholr_paltform.applications.domain.model.commands.CreatePostulanteCommand;
+import com.scholr.scholr_paltform.applications.domain.model.commands.DeleteApplicationCommand;
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetAllApplicationsQuery;
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetApplicationByIdQuery;
+import com.scholr.scholr_paltform.applications.domain.model.queries.GetApplicationsByApoderadoIdQuery;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationQueryService;
-import com.scholr.scholr_paltform.applications.interfaces.rest.resources.ApplicationResource;
-import com.scholr.scholr_paltform.applications.interfaces.rest.resources.CreateApplicationResource;
-import com.scholr.scholr_paltform.applications.interfaces.rest.resources.CreatePostulanteResource;
-import com.scholr.scholr_paltform.applications.interfaces.rest.resources.PostulanteResource;
+import com.scholr.scholr_paltform.applications.interfaces.rest.resources.*;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.ApplicationResourceFromEntityAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.CreateApplicationCommandFromResourceAssembler;
+import com.scholr.scholr_paltform.applications.interfaces.rest.transform.UpdateApplicationCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,6 +51,13 @@ public class ApplicationsController {
         return new ResponseEntity<>(applicationResource, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApplicationResource> deleteApplication(@PathVariable Long id){
+        var deleteApplicationCommand = new DeleteApplicationCommand(id);
+        this.applicationsCommandService.handle(deleteApplicationCommand);
+        return ResponseEntity.ok().build();
+    }
+
     //post postulante
     /*
     @PostMapping("/{id}/postulante")
@@ -76,6 +83,31 @@ public class ApplicationsController {
                 .map(ApplicationResourceFromEntityAssembler::toResourceFromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(applicationResources);
+    }
+
+    @GetMapping("/apoderado/{apoderadoId}")
+    public ResponseEntity<List<ApplicationResource>> getApplicationsByApoderadoId(@PathVariable Long apoderadoId) {
+        var getApplicationsByApoderadoIdQuery = new GetApplicationsByApoderadoIdQuery(apoderadoId);
+        var applications = this.applicationsQueryService.handle(getApplicationsByApoderadoIdQuery);
+        if (applications.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        var applicationResources = applications.stream()
+                .map(ApplicationResourceFromEntityAssembler::toResourceFromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(applicationResources);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApplicationResource> updateApplication(@PathVariable Long id, @RequestBody UpdateApplicationResource resource) {
+        var updateApplicationCommand = UpdateApplicationCommandFromResourceAssembler.toCommandFromResource(id, resource);
+        var optionalApplication = this.applicationsCommandService.handle(updateApplicationCommand);
+
+        if (optionalApplication.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
+        return ResponseEntity.ok(applicationResource);
     }
 
     //getApplicationById
