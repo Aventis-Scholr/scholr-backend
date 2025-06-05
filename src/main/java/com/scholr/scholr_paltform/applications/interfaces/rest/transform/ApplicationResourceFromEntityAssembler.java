@@ -8,7 +8,6 @@ public class ApplicationResourceFromEntityAssembler {
         return new ApplicationResource(
                 entity.getId(),
                 entity.getIdApoderado(),
-                entity.getDataApoderado(),
                 entity.getStatus(),
                 entity.getTipoBeca(),
                 entity.getPostulante()
