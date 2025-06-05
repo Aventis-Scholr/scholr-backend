@@ -2,14 +2,14 @@ package com.scholr.scholr_paltform.applications.interfaces.rest;
 
 import com.scholr.scholr_paltform.applications.domain.model.commands.CreatePostulanteCommand;
 import com.scholr.scholr_paltform.applications.domain.model.commands.DeleteApplicationCommand;
-import com.scholr.scholr_paltform.applications.domain.model.queries.GetAllApplicationsQuery;
-import com.scholr.scholr_paltform.applications.domain.model.queries.GetApplicationByIdQuery;
-import com.scholr.scholr_paltform.applications.domain.model.queries.GetApplicationsByApoderadoIdQuery;
+import com.scholr.scholr_paltform.applications.domain.model.queries.*;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationQueryService;
+import com.scholr.scholr_paltform.applications.domain.services.DataApoderadoQueryService;
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.*;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.ApplicationResourceFromEntityAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.CreateApplicationCommandFromResourceAssembler;
+import com.scholr.scholr_paltform.applications.interfaces.rest.transform.DataApoderadoResourceFromEntityAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.UpdateApplicationCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -27,17 +27,27 @@ import java.util.stream.Collectors;
 public class ApplicationsController {
     private final ApplicationQueryService applicationsQueryService;
     private final ApplicationCommandService applicationsCommandService;
+    private final DataApoderadoQueryService dataApoderadosQueryService;
 
-    public ApplicationsController(ApplicationQueryService applicationsQueryService, ApplicationCommandService applicationsCommandService) {
+    public ApplicationsController(ApplicationQueryService applicationsQueryService, ApplicationCommandService applicationsCommandService, DataApoderadoQueryService dataApoderadosQueryService) {
         this.applicationsQueryService = applicationsQueryService;
         this.applicationsCommandService = applicationsCommandService;
+        this.dataApoderadosQueryService = dataApoderadosQueryService;
+
     }
 
     //post postulacion
 
-    @PostMapping
-    public ResponseEntity<ApplicationResource> createApplication(@RequestBody CreateApplicationResource resource) {
-        var createApplicationCommand = CreateApplicationCommandFromResourceAssembler.toCommandFromResource(resource);
+    @PostMapping("/apoderado/{apoderadoId}")
+    public ResponseEntity<ApplicationResource> createApplication(@PathVariable Long apoderadoId, @RequestBody CreateApplicationResource resource) {
+
+        var getDataApoderadoByApoderadoId = new GetDataApoderadoByApoderadoIdQuery(apoderadoId);
+        var optionalDataApoderado = this.dataApoderadosQueryService.handle(getDataApoderadoByApoderadoId);
+        if (optionalDataApoderado.isEmpty())
+            return ResponseEntity.notFound().build();
+
+
+        var createApplicationCommand = CreateApplicationCommandFromResourceAssembler.toCommandFromResource(apoderadoId, optionalDataApoderado.get(), resource);
         var applicationId = this.applicationsCommandService.handle(createApplicationCommand);
 
         if (applicationId.equals(0L)) {
