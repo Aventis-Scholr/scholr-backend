@@ -18,9 +18,6 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
     //id del usuario
     private Long idApoderado;
 
-    @ManyToOne
-    private DataApoderado dataApoderado;
-
     private Status status;
 
     private TipoBeca tipoBeca;
@@ -32,9 +29,8 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
 
     public Application() {}
 
-    public Application(Long idApoderado, DataApoderado dataApoderado, Status status, TipoBeca tipoBeca, Postulante postulante) {
+    public Application(Long idApoderado, Status status, TipoBeca tipoBeca, Postulante postulante) {
         this.idApoderado = idApoderado;
-        this.dataApoderado = dataApoderado;
         this.status = status;
         this.tipoBeca = tipoBeca;
         this.postulante = postulante;
@@ -43,15 +39,13 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
     public Application(CreateApplicationCommand command){
         this();
         this.idApoderado = command.idApoderado();
-        this.dataApoderado = command.dataApoderado();
         this.status = command.status();
         this.tipoBeca = command.tipoBeca();
         this.postulante = command.postulante();
     }
 
-    public void UpdateApplication(Long idApoderado, DataApoderado dataApoderado, Status status, TipoBeca tipoBeca, Postulante postulante) {
+    public void UpdateApplication(Long idApoderado, Status status, TipoBeca tipoBeca, Postulante postulante) {
         this.idApoderado = idApoderado;
-        this.dataApoderado = dataApoderado;
         this.status = status;
         this.tipoBeca = tipoBeca;
         this.postulante = postulante;

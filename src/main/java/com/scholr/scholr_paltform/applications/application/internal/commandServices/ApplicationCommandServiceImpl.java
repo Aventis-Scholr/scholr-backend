@@ -38,7 +38,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
         var applicationToUpdate = this.applicationRepository.findById(applicationId).get();
         applicationToUpdate.UpdateApplication(command.idApoderado(),
-                command.dataApoderado(),
                 command.status(),
                 command.tipoBeca(),
                 command.postulante());

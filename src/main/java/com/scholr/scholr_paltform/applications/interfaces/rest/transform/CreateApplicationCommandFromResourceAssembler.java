@@ -5,10 +5,9 @@ import com.scholr.scholr_paltform.applications.domain.model.commands.CreateAppli
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.CreateApplicationResource;
 
 public class CreateApplicationCommandFromResourceAssembler {
-    public static CreateApplicationCommand toCommandFromResource(Long apoderadoId, DataApoderado dataApoderado, CreateApplicationResource resource){
+    public static CreateApplicationCommand toCommandFromResource(Long apoderadoId, CreateApplicationResource resource){
         return new CreateApplicationCommand(
                 apoderadoId,
-                dataApoderado,
                 resource.status(),
                 resource.tipoBeca(),
                 resource.postulante()
