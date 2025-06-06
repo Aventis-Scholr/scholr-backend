@@ -38,7 +38,7 @@ public class DataApoderadosController {
 
 
     //crear data apoderado
-    @PostMapping("/{apoderadoId}")
+    @PostMapping("/apoderado/{apoderadoId}")
     public ResponseEntity<DataApoderadoResource> createDataApoderado(@PathVariable Long apoderadoId,@RequestBody CreateDataApoderadoResource resource){
         var createDataApoderadoCommand = CreateDataApoderadoCommandFromResourceAssembler.toCommandFromResource(apoderadoId, resource);
                 var dataApoderadoId = this.dataApoderadosCommandService.handle(createDataApoderadoCommand);
@@ -54,8 +54,8 @@ public class DataApoderadosController {
         return new ResponseEntity<>(dataApoderadoResource, HttpStatus.CREATED);
     }
 
-    //obtener data apoderado por id
-    @GetMapping("/{id}")
+    // OBTENER DataApoderado por dataApoderadoId
+    @GetMapping("/id/{id}")
     public ResponseEntity<DataApoderadoResource> getDataApoderadoById(@PathVariable Long id){
         var getDataApoderadoByIdQuery = new GetDataApoderadoByIdQuery(id);
         var optionalDataApoderado = this.dataApoderadosQueryService.handle(getDataApoderadoByIdQuery);
@@ -67,8 +67,8 @@ public class DataApoderadosController {
         return ResponseEntity.ok(dataApoderadoResource);
     }
 
-    //modificar data apoderado por id
-    @PutMapping("/{id}")
+    // ACTUALIZAR DataApoderado por dataApoderadoId
+    @PutMapping("/id/{id}")
     public ResponseEntity<DataApoderadoResource> updateDataApoderado(@PathVariable Long id, @RequestBody DataApoderadoResource resource){
         var updateDataApoderadoCommand = UpdateDataApoderadoCommandFromResourceAssembler.toCommandFromResource(id, resource);
         var optionalDataApoderado = this.dataApoderadosCommandService.handle(updateDataApoderadoCommand);
@@ -81,21 +81,8 @@ public class DataApoderadosController {
 
     //agregando el id del usuario (apoderado) ---------
 
-    //obtener data apoderado por id de usuario
-    @GetMapping("/{apoderadoId}/{id}")
-    public ResponseEntity<DataApoderadoResource> getDataApoderadoApoderadoIdAndId(@PathVariable Long apoderadoId, @PathVariable Long id){
-        var getDataApoderadoByApoderadoIdAndId = new GetDataApoderadoByApoderadoIdAndDataApoderadoIdQuery(apoderadoId, id);
-        var optionalDataApoderado = this.dataApoderadosQueryService.handle(getDataApoderadoByApoderadoIdAndId);
-
-        if (optionalDataApoderado.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        var dataApoderadoResource = DataApoderadoResourceFromEntityAssembler.toResourceFromEntity(optionalDataApoderado.get());
-        return ResponseEntity.ok(dataApoderadoResource);
-    }
-
-    //hacer update de data apoderado por id de usuario
-    @PutMapping("/{apoderadoId}")
+    // ACTUALIZAR por apoderadoId
+    @PutMapping("/apoderado/{apoderadoId}")
     public ResponseEntity<DataApoderadoResource> updateDataApoderadoByApoderadoId(@PathVariable Long apoderadoId, @RequestBody DataApoderadoResource resource){
         var updateDataApoderadoCommand = UpdateDataApoderadoCommandFromResourceAssembler.toCommandFromResource(apoderadoId, resource);
         var optionalDataApoderado = this.dataApoderadosCommandService.handle(updateDataApoderadoCommand);
@@ -107,8 +94,8 @@ public class DataApoderadosController {
         return ResponseEntity.ok(dataApoderadoResource);
     }
 
-    //get data apoderado by apoderado id
-    @GetMapping("/{apoderadoId}")
+    // OBTENER DataApoderado por apoderadoId
+    @GetMapping("/apoderado/{apoderadoId}")
     public ResponseEntity<DataApoderadoResource> getDataApoderadoByApoderadoId(@PathVariable Long apoderadoId){
         var getDataApoderadoByApoderadoIdQuery = new GetDataApoderadoByApoderadoIdQuery(apoderadoId);
         var optionalDataApoderado = this.dataApoderadosQueryService.handle(getDataApoderadoByApoderadoIdQuery);
@@ -120,4 +107,17 @@ public class DataApoderadosController {
         return ResponseEntity.ok(dataApoderadoResource);
     }
 
+
+    // OBTENER DataApoderado por apoderadoId + dataApoderadoId (si necesitas este caso específico)
+    @GetMapping("/apoderado/{apoderadoId}/data/{id}")
+    public ResponseEntity<DataApoderadoResource> getDataApoderadoApoderadoIdAndId(@PathVariable Long apoderadoId, @PathVariable Long id){
+        var getDataApoderadoByApoderadoIdAndId = new GetDataApoderadoByApoderadoIdAndDataApoderadoIdQuery(apoderadoId, id);
+        var optionalDataApoderado = this.dataApoderadosQueryService.handle(getDataApoderadoByApoderadoIdAndId);
+
+        if (optionalDataApoderado.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        var dataApoderadoResource = DataApoderadoResourceFromEntityAssembler.toResourceFromEntity(optionalDataApoderado.get());
+        return ResponseEntity.ok(dataApoderadoResource);
+    }
 }
