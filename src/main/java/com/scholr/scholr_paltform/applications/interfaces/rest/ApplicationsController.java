@@ -85,6 +85,17 @@ public class ApplicationsController {
         return ResponseEntity.ok(applicationResources);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApplicationResource> getApplicationById(@PathVariable Long id) {
+        var getApplicationByIdQuery = new GetApplicationByIdQuery(id);
+        var optionalApplication = this.applicationsQueryService.handle(getApplicationByIdQuery);
+        if (optionalApplication.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
+        return ResponseEntity.ok(applicationResource);
+    }
+
     @GetMapping("/apoderado/{apoderadoId}")
     public ResponseEntity<List<ApplicationResource>> getApplicationsByApoderadoId(@PathVariable Long apoderadoId) {
         var getApplicationsByApoderadoIdQuery = new GetApplicationsByApoderadoIdQuery(apoderadoId);
