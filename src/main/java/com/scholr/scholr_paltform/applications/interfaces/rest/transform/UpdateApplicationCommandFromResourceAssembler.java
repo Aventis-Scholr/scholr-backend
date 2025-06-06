@@ -9,7 +9,6 @@ public class UpdateApplicationCommandFromResourceAssembler {
         return new UpdateApplicationCommand(
                 id,
                 resource.idApoderado(),
-                resource.dataApoderado(),
                 resource.status(),
                 resource.tipoBeca(),
                 new Postulante(

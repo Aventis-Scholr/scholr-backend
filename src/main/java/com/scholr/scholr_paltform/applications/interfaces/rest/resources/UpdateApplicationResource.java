@@ -7,7 +7,6 @@ import com.scholr.scholr_paltform.applications.domain.model.valueobjects.TipoBec
 
 public record UpdateApplicationResource(
         Long idApoderado,
-        DataApoderado dataApoderado,
         Status status,
         TipoBeca tipoBeca,
         Postulante postulante
