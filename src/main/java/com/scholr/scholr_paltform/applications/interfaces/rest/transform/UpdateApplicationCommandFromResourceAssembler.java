@@ -8,7 +8,6 @@ public class UpdateApplicationCommandFromResourceAssembler {
     public static UpdateApplicationCommand toCommandFromResource(Long id, UpdateApplicationResource resource) {
         return new UpdateApplicationCommand(
                 id,
-                resource.idApoderado(),
                 resource.status(),
                 resource.tipoBeca(),
                 new Postulante(

@@ -44,8 +44,7 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
         this.postulante = command.postulante();
     }
 
-    public void UpdateApplication(Long idApoderado, Status status, TipoBeca tipoBeca, Postulante postulante) {
-        this.idApoderado = idApoderado;
+    public void UpdateApplication(Status status, TipoBeca tipoBeca, Postulante postulante) {
         this.status = status;
         this.tipoBeca = tipoBeca;
         this.postulante = postulante;
