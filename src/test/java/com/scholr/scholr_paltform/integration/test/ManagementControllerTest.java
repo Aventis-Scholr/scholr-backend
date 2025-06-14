@@ -11,6 +11,7 @@ import com.scholr.scholr_paltform.management.interfaces.rest.ScholarshipsControl
 import com.scholr.scholr_paltform.management.interfaces.rest.resources.ScholarshipResource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,7 @@ import static org.mockito.Mockito.*;
 
 public class ManagementControllerTest {
 
-    @Mock
-    private ReportController reportController;
-
-    @Mock
+    @InjectMocks
     private ScholarshipsController scholarshipsController;
 
     @Mock
