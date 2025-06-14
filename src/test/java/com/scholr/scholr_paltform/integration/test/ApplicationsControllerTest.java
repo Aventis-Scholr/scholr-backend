@@ -15,6 +15,7 @@ import com.scholr.scholr_paltform.applications.interfaces.rest.resources.Applica
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.DataApoderadoResource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class ApplicationsControllerTest {
     @Mock
     private ApplicationQueryService applicationQueryService;
 
-    @Mock
+    @InjectMocks
     private ApplicationsController applicationsController;
 
     //--------------------------------------------------------
@@ -45,7 +46,7 @@ public class ApplicationsControllerTest {
     @Mock
     private DataApoderadoQueryService dataApoderadoQueryService;
 
-    @Mock
+    @InjectMocks
     private DataApoderadosController dataApoderadosController;
 
     //--------------------------------------------------------
