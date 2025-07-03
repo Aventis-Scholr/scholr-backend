@@ -6,9 +6,11 @@ import com.scholr.scholr_paltform.applications.domain.model.valueobjects.Contact
 import com.scholr.scholr_paltform.shared.domain.model.entities.AuditableModel;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Setter
 @Getter
 //@Entity
 //vamos a usar como value object
@@ -32,6 +34,8 @@ public class Postulante //extends AuditableModel
 
     @Embedded
     private CentroEstudios centroEstudios;
+
+    private String dniFile;
 
     public Postulante() {}
 

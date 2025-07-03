@@ -1,5 +1,6 @@
 package com.scholr.scholr_paltform.applications.interfaces.rest;
 
+import com.scholr.scholr_paltform.applications.domain.model.aggregates.Application;
 import com.scholr.scholr_paltform.applications.domain.model.commands.DeleteApplicationCommand;
 import com.scholr.scholr_paltform.applications.domain.model.queries.*;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
@@ -8,6 +9,9 @@ import com.scholr.scholr_paltform.applications.interfaces.rest.resources.*;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.ApplicationResourceFromEntityAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.CreateApplicationCommandFromResourceAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.UpdateApplicationCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 @RestController
@@ -120,6 +130,60 @@ public class ApplicationsController {
         var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
         return ResponseEntity.ok(applicationResource);
     }
+
+    //--------------------------------------------
+
+    @PostMapping(
+            value = "/{idPostulacion}/dni",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    @Operation(summary = "Sube DNI PDF para una postulación")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Archivo subido exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno")
+    })
+    public ResponseEntity<?> subirDni(
+            @PathVariable Long idPostulacion,
+            @RequestParam("file") MultipartFile file
+    ) {
+        try {
+            String dniUrl = applicationsCommandService.handle(file);
+
+            var getApplicationByIdQuery = new GetApplicationByIdQuery(idPostulacion);
+            Application application = applicationsQueryService.handle(getApplicationByIdQuery)
+                    .orElseThrow(() -> new RuntimeException("No existe la postulación"));
+
+            // Aquí guardarías dniUrl en la entidad application
+
+            return ResponseEntity.ok().body(Map.of("dniUrl", dniUrl));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+//    @PostMapping("/{idPostulacion}/dni")
+//    public ResponseEntity<?> subirDni(@PathVariable Long idPostulacion,
+//                                      @RequestParam("file") MultipartFile file) {
+//        try {
+//            String dniUrl = applicationsCommandService.handle(file);
+//
+//            var getApplicationByIdQuery = new GetApplicationByIdQuery(idPostulacion);
+//            Application application = applicationsQueryService.handle(getApplicationByIdQuery)
+//                    .orElseThrow(() -> new RuntimeException("No existe la postulación"));
+//
+//            /*var postulanteUpdate = application.getPostulante();
+//            postulanteUpdate.setDniFile(dniUrl);
+//
+//            application.setPostulante(postulanteUpdate);
+//
+//            postulacionRepository.save(postulacion);
+//            */
+//
+//            return ResponseEntity.ok().body(Map.of("dniUrl", dniUrl));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+//        }
+//    }
 
     //getApplicationById
     /*

@@ -7,7 +7,9 @@ import com.scholr.scholr_paltform.applications.domain.model.valueobjects.TipoBec
 import com.scholr.scholr_paltform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 @Entity
 public class Application extends AuditableAbstractAggregateRoot<Application> {

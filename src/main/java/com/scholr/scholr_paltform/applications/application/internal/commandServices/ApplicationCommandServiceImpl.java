@@ -1,5 +1,6 @@
 package com.scholr.scholr_paltform.applications.application.internal.commandServices;
 
+import com.cloudinary.utils.ObjectUtils;
 import com.scholr.scholr_paltform.applications.domain.model.aggregates.Application;
 import com.scholr.scholr_paltform.applications.domain.model.commands.CreateApplicationCommand;
 import com.scholr.scholr_paltform.applications.domain.model.commands.CreatePostulanteCommand;
@@ -9,16 +10,23 @@ import com.scholr.scholr_paltform.applications.domain.model.entities.Postulante;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
 import com.scholr.scholr_paltform.applications.infrastructure.persistence.jpa.repositories.ApplicationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
+import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
+import com.cloudinary.Cloudinary;
 
 @Service
 public class ApplicationCommandServiceImpl implements ApplicationCommandService {
     private final ApplicationRepository applicationRepository;
 
-    public ApplicationCommandServiceImpl(ApplicationRepository applicationRepository) {
+    private final Cloudinary cloudinary;
+
+    public ApplicationCommandServiceImpl(ApplicationRepository applicationRepository, Cloudinary cloudinary) {
         this.applicationRepository = applicationRepository;
+        this.cloudinary = cloudinary;
     }
 
     @Override
@@ -61,6 +69,26 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
             throw new IllegalArgumentException("Error while deleting application: " + e.getMessage());
         }
     }
+
+    //-----------------------------------------------
+
+    @Override
+    public String handle(MultipartFile file) {
+        try {
+            Map uploadResult = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "resource_type", "auto", // detecta PDF, imagen, video
+                            "folder", "pdfs"         // opcional: subcarpeta
+                    )
+            );
+            return uploadResult.get("secure_url").toString();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error while uploading file: " + e.getMessage(), e);
+        }
+    }
+
+    //-----------------------------------------------
 
 
     //creacion de postulante
