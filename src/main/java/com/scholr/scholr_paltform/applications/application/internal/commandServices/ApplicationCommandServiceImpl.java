@@ -1,5 +1,6 @@
 package com.scholr.scholr_paltform.applications.application.internal.commandServices;
 
+import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
 import com.scholr.scholr_paltform.applications.domain.model.aggregates.Application;
 import com.scholr.scholr_paltform.applications.domain.model.commands.CreateApplicationCommand;
@@ -82,11 +83,22 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                             "folder", "pdfs"         // opcional: subcarpeta
                     )
             );
-            return uploadResult.get("secure_url").toString();
+
+            String publicId = (String) uploadResult.get("public_id");
+
+            // ⚠️ Usa resourceType raw para PDFs
+            String downloadUrl = cloudinary.url()
+                    .resourceType("image")
+                    .secure(true)
+                    .transformation(new Transformation().flags("attachment"))
+                    .generate(publicId);
+
+            return downloadUrl;
         } catch (IOException e) {
             throw new IllegalArgumentException("Error while uploading file: " + e.getMessage(), e);
         }
     }
+
 
     //-----------------------------------------------
 
