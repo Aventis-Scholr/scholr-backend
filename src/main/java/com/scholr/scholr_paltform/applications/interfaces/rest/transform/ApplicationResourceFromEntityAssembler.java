@@ -10,7 +10,13 @@ public class ApplicationResourceFromEntityAssembler {
                 entity.getIdApoderado(),
                 entity.getStatus(),
                 entity.getTipoBeca(),
-                entity.getPostulante()
+                entity.getPostulante(),
+                entity.getPostulante_dni(),
+                entity.getPostulante_libreta_notas(),
+                entity.getPostulante_const_logro_aprendizaje(),
+                entity.getApoderado_dni(),
+                entity.getApoderado_declaracion_jurada()
         );
     }
+
 }

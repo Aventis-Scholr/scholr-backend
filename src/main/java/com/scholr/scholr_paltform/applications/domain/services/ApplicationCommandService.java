@@ -15,6 +15,12 @@ public interface ApplicationCommandService {
     void handle(DeleteApplicationCommand command);
     String handle(MultipartFile file);
 
+    Long handle(Long applicationId, String dni_postulante,
+                String postulante_libreta_notas,
+                String postulante_const_logro_aprendizaje,
+                String apoderadoDni,
+                String apoderadoDeclaracionJurada);
+
     //creacion de postulante
     //Long handle(CreatePostulanteCommand command);
 }

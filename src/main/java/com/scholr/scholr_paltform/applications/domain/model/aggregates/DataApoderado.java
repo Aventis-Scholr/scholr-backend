@@ -13,8 +13,7 @@ import java.util.Date;
 
 @Getter
 @Entity
-public class
-DataApoderado extends AuditableAbstractAggregateRoot<DataApoderado> {
+public class DataApoderado extends AuditableAbstractAggregateRoot<DataApoderado> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

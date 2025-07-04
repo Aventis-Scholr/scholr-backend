@@ -43,8 +43,9 @@ public class ApplicationsController {
 
     //post postulacion
 
-    @PostMapping("/apoderado/{apoderadoId}")
-    public ResponseEntity<ApplicationResource> createApplication(@PathVariable Long apoderadoId, @RequestBody CreateApplicationResource resource) {
+    @PostMapping(value = "/apoderado/{apoderadoId}")
+    public ResponseEntity<ApplicationResource> createApplication(
+            @PathVariable Long apoderadoId, @RequestBody CreateApplicationResource resource){
 
 
         var createApplicationCommand = CreateApplicationCommandFromResourceAssembler.toCommandFromResource(apoderadoId, resource);
@@ -89,10 +90,10 @@ public class ApplicationsController {
     public ResponseEntity<List<ApplicationResource>> getAllApplications() {
         var getAllApplicationsQuery = new GetAllApplicationsQuery();
         var applications = this.applicationsQueryService.handle(getAllApplicationsQuery);
-        var applicationResources = applications.stream()
+        var applicationResponseResources = applications.stream()
                 .map(ApplicationResourceFromEntityAssembler::toResourceFromEntity)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(applicationResources);
+        return ResponseEntity.ok(applicationResponseResources);
     }
 
     @GetMapping("/{id}")
@@ -133,29 +134,55 @@ public class ApplicationsController {
 
     //--------------------------------------------
 
-    @PostMapping(
-            value = "/{idPostulacion}/dni",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
-    @Operation(summary = "Sube DNI PDF para una postulación")
+    @PostMapping(value = "/{applicationId}/files",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Archivo subido exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
     public ResponseEntity<?> subirDni(
-            @PathVariable Long idPostulacion,
-            @RequestParam("file") MultipartFile file
-    ) {
-        try {
-            String dniUrl = applicationsCommandService.handle(file);
+            @PathVariable Long applicationId,
+            @RequestParam("postulante_dni") MultipartFile postulante_dni,
+            @RequestParam("postulante_libreta_notas") MultipartFile postulante_libreta_notas,
+            @RequestParam("postulante_const_logro_aprendizaje") MultipartFile postulante_const_logro_aprendizaje,
 
-            var getApplicationByIdQuery = new GetApplicationByIdQuery(idPostulacion);
+            @RequestParam("apoderado_dni") MultipartFile apoderado_dni,
+            @RequestParam("apoderado_declaracion_jurada") MultipartFile apoderado_declaracion_jurada
+
+    ) {
+
+        try {
+            String dni = applicationsCommandService.handle(postulante_dni);
+            String libreta_notas = applicationsCommandService.handle(postulante_libreta_notas);
+            String const_logro_aprendizaje = applicationsCommandService.handle(postulante_const_logro_aprendizaje);
+
+            String apoderadoDni = applicationsCommandService.handle(apoderado_dni);
+            String apoderadoDeclaracionJurada = applicationsCommandService.handle(apoderado_declaracion_jurada);
+
+
+            var getApplicationByIdQuery = new GetApplicationByIdQuery(applicationId);
             Application application = applicationsQueryService.handle(getApplicationByIdQuery)
                     .orElseThrow(() -> new RuntimeException("No existe la postulación"));
 
-            // Aquí guardarías dniUrl en la entidad application
+            application.setPostulante_dni(dni);
+            application.setPostulante_libreta_notas(libreta_notas);
+            application.setPostulante_const_logro_aprendizaje(const_logro_aprendizaje);
 
-            return ResponseEntity.ok().body(Map.of("dniUrl", dniUrl));
+            application.setApoderado_dni(apoderadoDni);
+            application.setApoderado_declaracion_jurada(apoderadoDeclaracionJurada);
+
+            applicationsCommandService.handle(applicationId,
+                    dni,
+                    libreta_notas,
+                    const_logro_aprendizaje,
+                    apoderadoDni,
+                    apoderadoDeclaracionJurada);
+
+            return ResponseEntity.ok().body(Map.of(
+                    "dni", dni,
+                    "libreta_notas", libreta_notas,
+                    "const_logro_aprendizaje", const_logro_aprendizaje
+            ));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }

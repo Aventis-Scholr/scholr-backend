@@ -29,6 +29,15 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
     @Embedded
     private Postulante postulante;
 
+
+    private String apoderado_dni;
+    private String apoderado_declaracion_jurada;
+
+    private String postulante_dni;
+    private String postulante_libreta_notas;
+    private String postulante_const_logro_aprendizaje;
+
+
     public Application() {}
 
     public Application(Long idApoderado, Status status, TipoBeca tipoBeca, Postulante postulante) {

@@ -33,16 +33,16 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     @Override
     public Long handle(CreateApplicationCommand command) {
         var application = new Application(command);
-        try{
+        try {
             this.applicationRepository.save(application);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalArgumentException("Error while saving application: " + e.getMessage());
         }
         return application.getId();
     }
 
     @Override
-    public Optional<Application> handle(UpdateApplicationCommand command){
+    public Optional<Application> handle(UpdateApplicationCommand command) {
         var applicationId = command.applicationId();
 
         var applicationToUpdate = this.applicationRepository.findById(applicationId).get();
@@ -59,14 +59,14 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     }
 
     @Override
-    public void handle(DeleteApplicationCommand command){
-        if (!this.applicationRepository.existsById(command.applicationId())){
+    public void handle(DeleteApplicationCommand command) {
+        if (!this.applicationRepository.existsById(command.applicationId())) {
             throw new IllegalArgumentException("Application does not exist");
         }
 
-        try{
+        try {
             this.applicationRepository.deleteById(command.applicationId());
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalArgumentException("Error while deleting application: " + e.getMessage());
         }
     }
@@ -103,30 +103,28 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     //-----------------------------------------------
 
 
-    //creacion de postulante
-    // Creación de postulante
-    /*@Override
-    public Long handle(CreatePostulanteCommand command) {
-        // Buscar la aplicación asociada
-        var applicationOptional = this.applicationRepository.findById(command.getApplicationId());
+    @Override
+    public Long handle(Long applicationId, String dni_postulante, String postulante_libreta_notas, String postulante_const_logro_aprendizaje, String apoderadoDni,
+                       String apoderadoDeclaracionJurada) {
+        var applicationOptional = applicationRepository.findById(applicationId);
         if (applicationOptional.isEmpty()) {
-            throw new IllegalArgumentException("Application not found for ID: " + command.getApplicationId());
+            throw new IllegalArgumentException("Application not found for ID: " + applicationId);
         }
 
         var application = applicationOptional.get();
+        application.setPostulante_dni(dni_postulante);
+        application.setPostulante_libreta_notas(postulante_libreta_notas);
+        application.setPostulante_const_logro_aprendizaje(postulante_const_logro_aprendizaje);
 
-        // Crear y agregar el postulante al agregado Application
-        var postulante = new Postulante(command);
-        application.addPostulante(postulante);
+        application.setApoderado_dni(apoderadoDni);
+        application.setApoderado_declaracion_jurada(apoderadoDeclaracionJurada);
 
         try {
-            // Guardar el agregado completo
             this.applicationRepository.save(application);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error while saving application with postulante: " + e.getMessage());
         }
 
-        return postulante.getId();
-    }*/
+        return application.getId();
+    }
 }
-

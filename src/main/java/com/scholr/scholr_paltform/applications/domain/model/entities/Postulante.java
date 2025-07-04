@@ -35,8 +35,6 @@ public class Postulante //extends AuditableModel
     @Embedded
     private CentroEstudios centroEstudios;
 
-    private String dniFile;
-
     public Postulante() {}
 
     public Postulante(String nombres, String apellidos, int dni, Date fechaNacimiento, Contacto contacto, CentroEstudios centroEstudios)
