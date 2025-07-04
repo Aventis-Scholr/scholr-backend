@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     //restricciones
     List<Application> findByIdApoderado(Long idApoderado);
+    List<Application> findByScholarshipId(Long scholarshipId);
 }

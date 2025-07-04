@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface ScholarshipRepository extends JpaRepository<Scholarship, Long> {
     Optional<Scholarship> findById(Long id);
     List<Scholarship> findByCompanyName(String companyName);
+    Optional<Scholarship> findByName(String name);
+
 }

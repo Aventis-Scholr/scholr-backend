@@ -45,7 +45,8 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
         var applicationToUpdate = this.applicationRepository.findById(applicationId).get();
         applicationToUpdate.UpdateApplication(
                 command.status(),
-                command.tipoBeca(),
+                //command.tipoBeca(),
+                command.scholarshipId(),
                 command.postulante());
         try {
             var updatedApplication = this.applicationRepository.save(applicationToUpdate);
