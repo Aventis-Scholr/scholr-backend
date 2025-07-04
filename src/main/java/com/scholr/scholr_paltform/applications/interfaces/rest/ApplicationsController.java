@@ -1,5 +1,6 @@
 package com.scholr.scholr_paltform.applications.interfaces.rest;
 
+import com.scholr.scholr_paltform.applications.domain.model.aggregates.Application;
 import com.scholr.scholr_paltform.applications.domain.model.commands.DeleteApplicationCommand;
 import com.scholr.scholr_paltform.applications.domain.model.queries.*;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
@@ -8,6 +9,9 @@ import com.scholr.scholr_paltform.applications.interfaces.rest.resources.*;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.ApplicationResourceFromEntityAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.CreateApplicationCommandFromResourceAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.UpdateApplicationCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 @RestController
@@ -33,8 +43,9 @@ public class ApplicationsController {
 
     //post postulacion
 
-    @PostMapping("/apoderado/{apoderadoId}")
-    public ResponseEntity<ApplicationResource> createApplication(@PathVariable Long apoderadoId, @RequestBody CreateApplicationResource resource) {
+    @PostMapping(value = "/apoderado/{apoderadoId}")
+    public ResponseEntity<ApplicationResource> createApplication(
+            @PathVariable Long apoderadoId, @RequestBody CreateApplicationResource resource){
 
 
         var createApplicationCommand = CreateApplicationCommandFromResourceAssembler.toCommandFromResource(apoderadoId, resource);
@@ -79,10 +90,10 @@ public class ApplicationsController {
     public ResponseEntity<List<ApplicationResource>> getAllApplications() {
         var getAllApplicationsQuery = new GetAllApplicationsQuery();
         var applications = this.applicationsQueryService.handle(getAllApplicationsQuery);
-        var applicationResources = applications.stream()
+        var applicationResponseResources = applications.stream()
                 .map(ApplicationResourceFromEntityAssembler::toResourceFromEntity)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(applicationResources);
+        return ResponseEntity.ok(applicationResponseResources);
     }
 
     @GetMapping("/{id}")
@@ -120,6 +131,86 @@ public class ApplicationsController {
         var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
         return ResponseEntity.ok(applicationResource);
     }
+
+    //--------------------------------------------
+
+    @PostMapping(value = "/{applicationId}/files",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Archivo subido exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno")
+    })
+    public ResponseEntity<?> subirDni(
+            @PathVariable Long applicationId,
+            @RequestParam("postulante_dni") MultipartFile postulante_dni,
+            @RequestParam("postulante_libreta_notas") MultipartFile postulante_libreta_notas,
+            @RequestParam("postulante_const_logro_aprendizaje") MultipartFile postulante_const_logro_aprendizaje,
+
+            @RequestParam("apoderado_dni") MultipartFile apoderado_dni,
+            @RequestParam("apoderado_declaracion_jurada") MultipartFile apoderado_declaracion_jurada
+
+    ) {
+
+        try {
+            String dni = applicationsCommandService.handle(postulante_dni);
+            String libreta_notas = applicationsCommandService.handle(postulante_libreta_notas);
+            String const_logro_aprendizaje = applicationsCommandService.handle(postulante_const_logro_aprendizaje);
+
+            String apoderadoDni = applicationsCommandService.handle(apoderado_dni);
+            String apoderadoDeclaracionJurada = applicationsCommandService.handle(apoderado_declaracion_jurada);
+
+
+            var getApplicationByIdQuery = new GetApplicationByIdQuery(applicationId);
+            Application application = applicationsQueryService.handle(getApplicationByIdQuery)
+                    .orElseThrow(() -> new RuntimeException("No existe la postulación"));
+
+            application.setPostulante_dni(dni);
+            application.setPostulante_libreta_notas(libreta_notas);
+            application.setPostulante_const_logro_aprendizaje(const_logro_aprendizaje);
+
+            application.setApoderado_dni(apoderadoDni);
+            application.setApoderado_declaracion_jurada(apoderadoDeclaracionJurada);
+
+            applicationsCommandService.handle(applicationId,
+                    dni,
+                    libreta_notas,
+                    const_logro_aprendizaje,
+                    apoderadoDni,
+                    apoderadoDeclaracionJurada);
+
+            return ResponseEntity.ok().body(Map.of(
+                    "dni", dni,
+                    "libreta_notas", libreta_notas,
+                    "const_logro_aprendizaje", const_logro_aprendizaje
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+//    @PostMapping("/{idPostulacion}/dni")
+//    public ResponseEntity<?> subirDni(@PathVariable Long idPostulacion,
+//                                      @RequestParam("file") MultipartFile file) {
+//        try {
+//            String dniUrl = applicationsCommandService.handle(file);
+//
+//            var getApplicationByIdQuery = new GetApplicationByIdQuery(idPostulacion);
+//            Application application = applicationsQueryService.handle(getApplicationByIdQuery)
+//                    .orElseThrow(() -> new RuntimeException("No existe la postulación"));
+//
+//            /*var postulanteUpdate = application.getPostulante();
+//            postulanteUpdate.setDniFile(dniUrl);
+//
+//            application.setPostulante(postulanteUpdate);
+//
+//            postulacionRepository.save(postulacion);
+//            */
+//
+//            return ResponseEntity.ok().body(Map.of("dniUrl", dniUrl));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+//        }
+//    }
 
     //getApplicationById
     /*

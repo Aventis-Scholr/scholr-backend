@@ -7,7 +7,9 @@ import com.scholr.scholr_paltform.applications.domain.model.valueobjects.TipoBec
 import com.scholr.scholr_paltform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 @Entity
 public class Application extends AuditableAbstractAggregateRoot<Application> {
@@ -26,6 +28,15 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
     //vamos a usar como value object
     @Embedded
     private Postulante postulante;
+
+
+    private String apoderado_dni;
+    private String apoderado_declaracion_jurada;
+
+    private String postulante_dni;
+    private String postulante_libreta_notas;
+    private String postulante_const_logro_aprendizaje;
+
 
     public Application() {}
 

@@ -10,5 +10,10 @@ public record ApplicationResource(
         Long idApoderado,
         Status status,
         TipoBeca tipoBeca,
-        Postulante postulante
+        Postulante postulante,
+        String postulante_dni,
+        String postulante_libreta_notas,
+        String postulante_const_logro_aprendizaje,
+        String apoderado_dni,
+        String apoderado_declaracion_jurada
 ) {}
