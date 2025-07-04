@@ -15,5 +15,6 @@ public record ApplicationResource(
         String postulante_libreta_notas,
         String postulante_const_logro_aprendizaje,
         String apoderado_dni,
-        String apoderado_declaracion_jurada
+        String apoderado_declaracion_jurada,
+        String reporte
 ) {}
