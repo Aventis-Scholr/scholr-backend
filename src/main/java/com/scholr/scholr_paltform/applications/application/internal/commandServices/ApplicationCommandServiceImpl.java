@@ -3,10 +3,7 @@ package com.scholr.scholr_paltform.applications.application.internal.commandServ
 import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
 import com.scholr.scholr_paltform.applications.domain.model.aggregates.Application;
-import com.scholr.scholr_paltform.applications.domain.model.commands.CreateApplicationCommand;
-import com.scholr.scholr_paltform.applications.domain.model.commands.CreatePostulanteCommand;
-import com.scholr.scholr_paltform.applications.domain.model.commands.DeleteApplicationCommand;
-import com.scholr.scholr_paltform.applications.domain.model.commands.UpdateApplicationCommand;
+import com.scholr.scholr_paltform.applications.domain.model.commands.*;
 import com.scholr.scholr_paltform.applications.domain.model.entities.Postulante;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
 import com.scholr.scholr_paltform.applications.infrastructure.persistence.jpa.repositories.ApplicationRepository;
@@ -127,4 +124,23 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
         return application.getId();
     }
+
+    @Override
+    public Optional<Application> handle(UpdateStatusApplicationCommand command) {
+        var applicationOptional = this.applicationRepository.findById(command.id());
+        if (applicationOptional.isEmpty()) {
+            return Optional.empty();
+        }
+
+        var application = applicationOptional.get();
+        application.setStatus(command.status());
+
+        try {
+            applicationRepository.save(application);
+            return Optional.of(application);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error while updating status: " + e.getMessage());
+        }
+    }
+
 }

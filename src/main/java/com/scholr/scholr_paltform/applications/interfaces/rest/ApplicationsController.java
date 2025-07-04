@@ -9,6 +9,7 @@ import com.scholr.scholr_paltform.applications.interfaces.rest.resources.*;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.ApplicationResourceFromEntityAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.CreateApplicationCommandFromResourceAssembler;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.UpdateApplicationCommandFromResourceAssembler;
+import com.scholr.scholr_paltform.applications.interfaces.rest.transform.UpdateStatusApplicationCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -125,6 +126,18 @@ public class ApplicationsController {
         if (optionalApplication.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
+        return ResponseEntity.ok(applicationResource);
+    }
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ApplicationResource> updateStatus(@PathVariable Long id, @RequestBody UpdateStatusApplicationResource resource) {
+        var command = UpdateStatusApplicationCommandFromResourceAssembler.toCommandFromResource(id, resource);
+        var optionalApplication = applicationsCommandService.handle(command);
+
+        if (optionalApplication.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
         var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
         return ResponseEntity.ok(applicationResource);
     }
@@ -249,4 +262,5 @@ public class ApplicationsController {
         var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
         return new ResponseEntity<>(applicationResource, HttpStatus.CREATED);
     }*/
+
 }
