@@ -7,7 +7,8 @@ import com.scholr.scholr_paltform.applications.domain.model.valueobjects.TipoBec
 
 public record UpdateApplicationResource(
         Status status,
-        TipoBeca tipoBeca,
+        //TipoBeca tipoBeca,
+        String scholarshipName,
         Postulante postulante
 ) {
 }

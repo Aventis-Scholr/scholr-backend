@@ -5,11 +5,13 @@ import com.scholr.scholr_paltform.applications.domain.model.commands.CreateAppli
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.CreateApplicationResource;
 
 public class CreateApplicationCommandFromResourceAssembler {
-    public static CreateApplicationCommand toCommandFromResource(Long apoderadoId, CreateApplicationResource resource){
+    public static CreateApplicationCommand toCommandFromResource(Long apoderadoId, CreateApplicationResource resource,
+                                                                 Long scholarshipId){
         return new CreateApplicationCommand(
                 apoderadoId,
                 resource.status(),
-                resource.tipoBeca(),
+                //resource.tipoBeca(),
+                scholarshipId,
                 resource.postulante()
         );
     }
