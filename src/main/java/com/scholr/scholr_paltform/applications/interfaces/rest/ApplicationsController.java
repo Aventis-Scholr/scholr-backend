@@ -69,22 +69,6 @@ public class ApplicationsController {
         return ResponseEntity.ok().build();
     }
 
-    //post postulante
-    /*
-    @PostMapping("/{id}/postulante")
-    public ResponseEntity<PostulanteResource> createPostulante(@PathVariable Long id, @RequestBody CreatePostulanteResource resource){
-        var createPostulanteCommand = new CreatePostulanteCommand(
-                resource.nombres(),
-                resource.apellidos(),
-                resource.dni(),
-                resource.fechaNacimiento(),
-                resource.contacto(),
-                resource.centroEstudios()
-                );
-
-        var postulanteId = this.applicationsCommandService.handle(createPostulanteCommand);
-    }*/
-
     //get applications
     @GetMapping
     public ResponseEntity<List<ApplicationResource>> getAllApplications() {
@@ -111,6 +95,19 @@ public class ApplicationsController {
     public ResponseEntity<List<ApplicationResource>> getApplicationsByApoderadoId(@PathVariable Long apoderadoId) {
         var getApplicationsByApoderadoIdQuery = new GetApplicationsByApoderadoIdQuery(apoderadoId);
         var applications = this.applicationsQueryService.handle(getApplicationsByApoderadoIdQuery);
+        if (applications.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        var applicationResources = applications.stream()
+                .map(ApplicationResourceFromEntityAssembler::toResourceFromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(applicationResources);
+    }
+
+    @GetMapping("/pendingapplications/{apoderadoId}")
+    public ResponseEntity<List<ApplicationResource>> getPendingApplicationsByApoderadoId(@PathVariable Long apoderadoId) {
+        var getPendingApplicationsByApoderadoIdQuery = new GetPendingApplicationsByApoderadoId(apoderadoId);
+        var applications = this.applicationsQueryService.handle(getPendingApplicationsByApoderadoIdQuery);
         if (applications.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

@@ -4,6 +4,8 @@ import com.scholr.scholr_paltform.applications.domain.model.aggregates.Applicati
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetAllApplicationsQuery;
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetApplicationByIdQuery;
 import com.scholr.scholr_paltform.applications.domain.model.queries.GetApplicationsByApoderadoIdQuery;
+import com.scholr.scholr_paltform.applications.domain.model.queries.GetPendingApplicationsByApoderadoId;
+import com.scholr.scholr_paltform.applications.domain.model.valueobjects.Status;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationQueryService;
 import com.scholr.scholr_paltform.applications.infrastructure.persistence.jpa.repositories.ApplicationRepository;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,14 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
     @Override
     public List<Application> handle(GetAllApplicationsQuery query) {
         return this.applicationRepository.findAll();
+    }
+
+    @Override
+    public List<Application> handle(GetPendingApplicationsByApoderadoId query) {
+        return this.applicationRepository.findByIdApoderado(query.apoderadoId())
+                .stream()
+                .filter(application -> application.getStatus().equals(Status.PENDIENTE))
+                .toList();
     }
 
     @Override
