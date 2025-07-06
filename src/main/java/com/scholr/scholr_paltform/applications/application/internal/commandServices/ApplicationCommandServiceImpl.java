@@ -144,4 +144,22 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
         }
     }
 
+    @Override
+    public Optional<Application> handle(UpdateReporteApplicationCommand command) {
+        var applicationOptional = this.applicationRepository.findById(command.id());
+        if (applicationOptional.isEmpty()) {
+            return Optional.empty();
+        }
+
+        var application = applicationOptional.get();
+        application.setReporte(command.reporte());
+
+        try {
+            applicationRepository.save(application);
+            return Optional.of(application);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error while updating report: " + e.getMessage());
+        }
+    }
+
 }

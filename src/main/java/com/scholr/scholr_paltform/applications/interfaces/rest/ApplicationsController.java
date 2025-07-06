@@ -6,12 +6,10 @@ import com.scholr.scholr_paltform.applications.domain.model.queries.*;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationQueryService;
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.*;
-import com.scholr.scholr_paltform.applications.interfaces.rest.transform.ApplicationResourceFromEntityAssembler;
-import com.scholr.scholr_paltform.applications.interfaces.rest.transform.CreateApplicationCommandFromResourceAssembler;
-import com.scholr.scholr_paltform.applications.interfaces.rest.transform.UpdateApplicationCommandFromResourceAssembler;
-import com.scholr.scholr_paltform.applications.interfaces.rest.transform.UpdateStatusApplicationCommandFromResourceAssembler;
-import com.scholr.scholr_paltform.management.domain.model.queries.GetScholarshipByNameQuery;
+import com.scholr.scholr_paltform.applications.interfaces.rest.transform.*;
+
 import com.scholr.scholr_paltform.management.domain.services.ScholarshipQueryService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -161,6 +159,21 @@ public class ApplicationsController {
         var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
         return ResponseEntity.ok(applicationResource);
     }
+
+    @PutMapping("/{id}/reporte")
+    public ResponseEntity<ApplicationResource> updateReporte(@PathVariable Long id, @RequestBody UpdateReporteApplicationResource resource) {
+        var command = UpdateReporteApplicationCommandFromResourceAssembler.toCommandFromResource(id, resource);
+        var optionalApplication = applicationsCommandService.handle(command);
+
+        if (optionalApplication.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
+        return ResponseEntity.ok(applicationResource);
+    }
+
+
 
     //--------------------------------------------
 
