@@ -7,7 +7,9 @@ import com.scholr.scholr_paltform.applications.domain.model.valueobjects.TipoBec
 import com.scholr.scholr_paltform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 @Entity
 public class Application extends AuditableAbstractAggregateRoot<Application> {
@@ -20,19 +22,30 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
 
     private Status status;
 
-    private TipoBeca tipoBeca;
+    //private TipoBeca tipoBeca;
+    private Long scholarshipId;
 
     //@ManyToOne
     //vamos a usar como value object
     @Embedded
     private Postulante postulante;
 
+
+    private String apoderado_dni;
+    private String apoderado_declaracion_jurada;
+
+    private String postulante_dni;
+    private String postulante_libreta_notas;
+    private String postulante_const_logro_aprendizaje;
+
+
     public Application() {}
 
-    public Application(Long idApoderado, Status status, TipoBeca tipoBeca, Postulante postulante) {
+    public Application(Long idApoderado, Status status, /*TipoBeca tipoBeca*/ Long scholarshipId, Postulante postulante) {
         this.idApoderado = idApoderado;
         this.status = status;
-        this.tipoBeca = tipoBeca;
+        //this.tipoBeca = tipoBeca;
+        this.scholarshipId = scholarshipId;
         this.postulante = postulante;
     }
 
@@ -40,13 +53,15 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
         this();
         this.idApoderado = command.idApoderado();
         this.status = command.status();
-        this.tipoBeca = command.tipoBeca();
+        //this.tipoBeca = command.tipoBeca();
+        this.scholarshipId = command.scholarshipId();
         this.postulante = command.postulante();
     }
 
-    public void UpdateApplication(Status status, TipoBeca tipoBeca, Postulante postulante) {
+    public void UpdateApplication(Status status, /*TipoBeca tipoBeca*/ Long scholarshipId, Postulante postulante) {
         this.status = status;
-        this.tipoBeca = tipoBeca;
+        //this.tipoBeca = tipoBeca;
+        this.scholarshipId = scholarshipId;
         this.postulante = postulante;
     }
 

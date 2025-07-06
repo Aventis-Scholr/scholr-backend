@@ -2,6 +2,7 @@ package com.scholr.scholr_paltform.management.interfaces.rest;
 
 import com.scholr.scholr_paltform.management.domain.model.commands.CreateScholarshipCommand;
 import com.scholr.scholr_paltform.management.domain.model.queries.GetAllScholarshipsQuery;
+import com.scholr.scholr_paltform.management.domain.model.queries.GetScholarshipsByCompanyNameQuery;
 import com.scholr.scholr_paltform.management.domain.services.ScholarshipCommandService;
 import com.scholr.scholr_paltform.management.domain.services.ScholarshipQueryService;
 import com.scholr.scholr_paltform.management.interfaces.rest.resources.CreateScholarshipResource;
@@ -48,6 +49,15 @@ public class ScholarshipsController {
     public ResponseEntity<List<ScholarshipResource>> getAllScholarships() {
         var getAllScholarshipsQuery = new GetAllScholarshipsQuery();
         var scholarships = this.scholarshipsQueryService.handle(getAllScholarshipsQuery);
+        var scholarshipResources = scholarships.stream()
+                .map(ScholarshipResourceFromEntityAssembler::toResourceFromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(scholarshipResources);
+    }
+
+    @GetMapping("/company/{companyName}")
+    public ResponseEntity<List<ScholarshipResource>> getScholarshipsByCompanyName(@PathVariable String companyName) {
+        var scholarships = this.scholarshipsQueryService.handle(new GetScholarshipsByCompanyNameQuery(companyName));
         var scholarshipResources = scholarships.stream()
                 .map(ScholarshipResourceFromEntityAssembler::toResourceFromEntity)
                 .collect(Collectors.toList());
