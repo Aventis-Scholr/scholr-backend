@@ -8,6 +8,7 @@ import com.scholr.scholr_paltform.applications.domain.services.ApplicationQueryS
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.*;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.*;
 
+import com.scholr.scholr_paltform.management.domain.model.queries.GetScholarshipByNameQuery;
 import com.scholr.scholr_paltform.management.domain.services.ScholarshipQueryService;
 
 import io.swagger.v3.oas.annotations.Operation;
