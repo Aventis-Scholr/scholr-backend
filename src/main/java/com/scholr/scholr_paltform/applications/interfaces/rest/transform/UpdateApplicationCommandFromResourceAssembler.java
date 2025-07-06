@@ -5,11 +5,12 @@ import com.scholr.scholr_paltform.applications.domain.model.entities.Postulante;
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.UpdateApplicationResource;
 
 public class UpdateApplicationCommandFromResourceAssembler {
-    public static UpdateApplicationCommand toCommandFromResource(Long id, UpdateApplicationResource resource) {
+    public static UpdateApplicationCommand toCommandFromResource(Long id, UpdateApplicationResource resource, Long scholarshipId) {
         return new UpdateApplicationCommand(
                 id,
                 resource.status(),
-                resource.tipoBeca(),
+                //resource.tipoBeca(),
+                scholarshipId,
                 new Postulante(
                         resource.postulante().getNombres(),
                         resource.postulante().getApellidos(),

@@ -7,6 +7,9 @@ import com.scholr.scholr_paltform.applications.domain.services.ApplicationComman
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationQueryService;
 import com.scholr.scholr_paltform.applications.interfaces.rest.resources.*;
 import com.scholr.scholr_paltform.applications.interfaces.rest.transform.*;
+
+import com.scholr.scholr_paltform.management.domain.services.ScholarshipQueryService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,11 +35,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class ApplicationsController {
     private final ApplicationQueryService applicationsQueryService;
     private final ApplicationCommandService applicationsCommandService;
+    private final ScholarshipQueryService scholarshipQueryService;
 
-    public ApplicationsController(ApplicationQueryService applicationsQueryService, ApplicationCommandService applicationsCommandService) {
+    public ApplicationsController(ApplicationQueryService applicationsQueryService, ApplicationCommandService applicationsCommandService, ScholarshipQueryService scholarshipQueryService) {
         this.applicationsQueryService = applicationsQueryService;
         this.applicationsCommandService = applicationsCommandService;
-
+        this.scholarshipQueryService = scholarshipQueryService;
     }
 
     //post postulacion
@@ -46,7 +50,16 @@ public class ApplicationsController {
             @PathVariable Long apoderadoId, @RequestBody CreateApplicationResource resource){
 
 
-        var createApplicationCommand = CreateApplicationCommandFromResourceAssembler.toCommandFromResource(apoderadoId, resource);
+        var scholarship = this.scholarshipQueryService.handle(new GetScholarshipByNameQuery(resource.scholarshipName()));
+
+        if (scholarship == null || scholarship.isEmpty()) {
+            System.out.println("scholarship no encontrada");
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        System.out.println("scholarship id:" + scholarship.get().getId());
+
+        var createApplicationCommand = CreateApplicationCommandFromResourceAssembler.toCommandFromResource(apoderadoId, resource, scholarship.get().getId());
         var applicationId = this.applicationsCommandService.handle(createApplicationCommand);
 
         if (applicationId.equals(0L)) {
@@ -117,7 +130,15 @@ public class ApplicationsController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApplicationResource> updateApplication(@PathVariable Long id, @RequestBody UpdateApplicationResource resource) {
-        var updateApplicationCommand = UpdateApplicationCommandFromResourceAssembler.toCommandFromResource(id, resource);
+
+        var scholarship = this.scholarshipQueryService.handle(new GetScholarshipByNameQuery(resource.scholarshipName()));
+
+        if (scholarship == null || scholarship.isEmpty()) {
+            System.out.println("scholarship no encontrada");
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        var updateApplicationCommand = UpdateApplicationCommandFromResourceAssembler.toCommandFromResource(id, resource, scholarship.get().getId());
         var optionalApplication = this.applicationsCommandService.handle(updateApplicationCommand);
 
         if (optionalApplication.isEmpty()) {

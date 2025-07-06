@@ -8,7 +8,8 @@ import com.scholr.scholr_paltform.applications.domain.model.valueobjects.TipoBec
 public record UpdateApplicationCommand(
         Long applicationId,
         Status status,
-        TipoBeca tipoBeca,
+        //TipoBeca tipoBeca,
+        Long scholarshipId,
         Postulante postulante
 ) {
 }
