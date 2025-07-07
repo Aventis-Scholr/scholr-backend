@@ -43,7 +43,6 @@ public class IamServiceTest {
         String username = "María";
         String password = "157896";
 
-
         // Act
         SignInCommand signInCommand = new SignInCommand(username, password);
 
