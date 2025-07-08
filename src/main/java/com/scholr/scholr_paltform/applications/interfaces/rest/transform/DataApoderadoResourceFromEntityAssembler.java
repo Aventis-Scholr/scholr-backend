@@ -7,6 +7,7 @@ public class DataApoderadoResourceFromEntityAssembler {
     public static DataApoderadoResource toResourceFromEntity(DataApoderado entity) {
         return new DataApoderadoResource(
                 entity.getId(),
+                entity.getApoderadoId(),
                 entity.getNombres(),
                 entity.getApellidos(),
                 entity.getDni(),
