@@ -19,4 +19,14 @@ public class Requirement {
         this.description = description;
         this.isMandatory = isMandatory;
     }
+  
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public Boolean getIsMandatory() { return isMandatory; }
+    public void setIsMandatory(Boolean isMandatory) { this.isMandatory = isMandatory; }
+
 }

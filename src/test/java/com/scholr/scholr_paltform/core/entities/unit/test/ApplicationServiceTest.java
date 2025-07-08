@@ -57,7 +57,7 @@ public class ApplicationServiceTest {
         //Arrange
         Long idApoderado = 1L;
         Status status = Status.PENDIENTE;
-        TipoBeca tipoBeca = TipoBeca.MERITO;
+        Long tipoBeca = 2L;
         Postulante postulante = new Postulante("Carlos", "Diaz", 456123789, new Date(),
                 new Contacto("carlos@gmail.com", 456789123),
                 new CentroEstudios("ColegioXYZ", "Privado", "Secundaria", "Lima", "Lima", "Lima"));
@@ -73,7 +73,7 @@ public class ApplicationServiceTest {
         //Assert
         assertEquals(idApoderado , createApplicationCommand.idApoderado());
         assertEquals(status, createApplicationCommand.status());
-        assertEquals(tipoBeca, createApplicationCommand.tipoBeca());
+        assertEquals(tipoBeca, createApplicationCommand.scholarshipId());
         assertEquals(postulante, createApplicationCommand.postulante());
 
     }

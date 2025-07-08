@@ -1,5 +1,7 @@
 package com.scholr.scholr_paltform.iam.interfaces.rest;
 
+import com.scholr.scholr_paltform.applications.domain.model.queries.GetApoderadosWIthPendingApplicationByScholarshipId;
+import com.scholr.scholr_paltform.applications.domain.services.ApplicationQueryService;
 import com.scholr.scholr_paltform.iam.domain.model.queries.GetAllUsersQuery;
 import com.scholr.scholr_paltform.iam.domain.model.queries.GetUserByIdQuery;
 import com.scholr.scholr_paltform.iam.domain.services.UserCommandService;
@@ -29,10 +31,13 @@ public class UsersController {
 
   private final UserQueryService userQueryService;
   private final UserCommandService userCommandService;
-  public UsersController(UserQueryService userQueryService, UserCommandService userCommandService)
+  private final ApplicationQueryService applicationQueryService;
+
+  public UsersController(UserQueryService userQueryService, UserCommandService userCommandService, ApplicationQueryService applicationQueryService)
   {
     this.userCommandService = userCommandService;
     this.userQueryService = userQueryService;
+      this.applicationQueryService = applicationQueryService;
   }
 
   /**
@@ -81,6 +86,26 @@ public class UsersController {
     userCommandService.updateProofingEntrepreneure(command);
 
     return ResponseEntity.ok("ProofingEntrepreneure updated successfully.");
+  }
+
+  @GetMapping("/apoderados/scholarships/{scholarshipId}/pendingApplication")
+  public ResponseEntity<List<UserResource>> getApoderadosByPendingnApplicationWithScholarshipId(
+            @PathVariable Long scholarshipId) {
+
+    List<Long> apoderadosIds = applicationQueryService.handle(
+                new GetApoderadosWIthPendingApplicationByScholarshipId(scholarshipId));
+
+    System.out.println("Apoderados IDs: " + apoderadosIds);
+
+    List<UserResource> apoderados = apoderadosIds.stream()
+            .map(id -> userQueryService.handle(new GetUserByIdQuery(id))
+                    .map(UserResourceFromEntityAssembler::toResourceFromEntity)
+                    .orElse(null))
+            .filter(user -> user != null)
+            .toList();
+
+    return ResponseEntity.ok(apoderados);
+
   }
 
 }

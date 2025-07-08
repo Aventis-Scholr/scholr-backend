@@ -59,11 +59,11 @@ public class ApplicationsControllerTest {
     @Test
     void testGetAllApplicationsSuccess() {
         // Arrange
-        var application1 = new Application(1L, Status.PENDIENTE, TipoBeca.MERITO, new Postulante("Carlos", "Diaz", 456123789, new Date(),
+        var application1 = new Application(1L, Status.PENDIENTE, 1L, new Postulante("Carlos", "Diaz", 456123789, new Date(),
                 new Contacto("carlos@gmail.com", 456789123),
                 new CentroEstudios("ColegioXYZ", "Privado", "Secundaria", "Lima", "Lima", "Lima")) );
 
-        var application2 = new Application(2L, Status.PENDIENTE, TipoBeca.MERITO, new Postulante("Luis", "Noriega", 45612669, new Date(),
+        var application2 = new Application(2L, Status.PENDIENTE, 2L, new Postulante("Luis", "Noriega", 45612669, new Date(),
                 new Contacto("luis@gmail.com", 466689123),
                 new CentroEstudios("ColegioYYY", "Privado", "Secundaria", "Lima", "Lima", "Lima")));
 

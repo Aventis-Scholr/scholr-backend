@@ -3,6 +3,7 @@ package com.scholr.scholr_paltform.management.application.internal.queryServices
 import com.scholr.scholr_paltform.management.domain.model.aggregates.Scholarship;
 import com.scholr.scholr_paltform.management.domain.model.queries.GetAllScholarshipsQuery;
 import com.scholr.scholr_paltform.management.domain.model.queries.GetScholarshipByIdQuery;
+import com.scholr.scholr_paltform.management.domain.model.queries.GetScholarshipByNameQuery;
 import com.scholr.scholr_paltform.management.domain.model.queries.GetScholarshipsByCompanyNameQuery;
 import com.scholr.scholr_paltform.management.domain.services.ScholarshipQueryService;
 import com.scholr.scholr_paltform.management.infrastructure.persistence.jpa.repositories.ScholarshipRepository;
@@ -32,5 +33,10 @@ public class ScholarshipQueryServiceImpl implements ScholarshipQueryService {
     @Override
     public Optional<Scholarship> handle(GetScholarshipByIdQuery query) {
         return this.scholarshipRepository.findById(query.id());
+    }
+
+    @Override
+    public Optional<Scholarship> handle(GetScholarshipByNameQuery query) {
+        return this.scholarshipRepository.findByName(query.scholarshipName());
     }
 }
