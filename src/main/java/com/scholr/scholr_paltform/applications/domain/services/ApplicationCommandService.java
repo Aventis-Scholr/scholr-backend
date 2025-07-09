@@ -20,6 +20,5 @@ public interface ApplicationCommandService {
                 String apoderadoDni,
                 String apoderadoDeclaracionJurada);
 
-    //creacion de postulante
-    //Long handle(CreatePostulanteCommand command);
+    void handle(RejectAllApplicationsByApoderadoId command);
 }

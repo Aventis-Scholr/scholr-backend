@@ -1,6 +1,7 @@
 package com.scholr.scholr_paltform.management.interfaces.rest;
 
 import com.scholr.scholr_paltform.management.domain.model.commands.CreateScholarshipCommand;
+import com.scholr.scholr_paltform.management.domain.model.commands.DeleteScholarshipCommand;
 import com.scholr.scholr_paltform.management.domain.model.queries.GetAllScholarshipsQuery;
 import com.scholr.scholr_paltform.management.domain.model.queries.GetScholarshipsByCompanyNameQuery;
 import com.scholr.scholr_paltform.management.domain.services.ScholarshipCommandService;
@@ -62,5 +63,16 @@ public class ScholarshipsController {
                 .map(ScholarshipResourceFromEntityAssembler::toResourceFromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(scholarshipResources);
+    }
+
+    @DeleteMapping("scholarship/{scholarshipId}")
+    public ResponseEntity<Void> deleteScholarship(@PathVariable Long scholarshipId) {
+        var deleteScholarshipCommand = new DeleteScholarshipCommand(scholarshipId);
+        try {
+            this.scholarshipsCommandService.handle(deleteScholarshipCommand);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
