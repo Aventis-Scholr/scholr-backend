@@ -3,7 +3,6 @@ package com.scholr.scholr_paltform.applications.domain.model.aggregates;
 import com.scholr.scholr_paltform.applications.domain.model.commands.CreateApplicationCommand;
 import com.scholr.scholr_paltform.applications.domain.model.entities.Postulante;
 import com.scholr.scholr_paltform.applications.domain.model.valueobjects.Status;
-import com.scholr.scholr_paltform.applications.domain.model.valueobjects.TipoBeca;
 import com.scholr.scholr_paltform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,7 +21,6 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
 
     private Status status;
 
-    //private TipoBeca tipoBeca;
     private Long scholarshipId;
 
     //@ManyToOne
@@ -44,10 +42,9 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
 
     public Application() {}
 
-    public Application(Long idApoderado, Status status, /*TipoBeca tipoBeca*/ Long scholarshipId, Postulante postulante) {
+    public Application(Long idApoderado, Status status, Long scholarshipId, Postulante postulante) {
         this.idApoderado = idApoderado;
         this.status = status;
-        //this.tipoBeca = tipoBeca;
         this.scholarshipId = scholarshipId;
         this.postulante = postulante;
     }
@@ -56,14 +53,12 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
         this();
         this.idApoderado = command.idApoderado();
         this.status = command.status();
-        //this.tipoBeca = command.tipoBeca();
         this.scholarshipId = command.scholarshipId();
         this.postulante = command.postulante();
     }
 
-    public void UpdateApplication(Status status, /*TipoBeca tipoBeca*/ Long scholarshipId, Postulante postulante) {
+    public void UpdateApplication(Status status, Long scholarshipId, Postulante postulante) {
         this.status = status;
-        //this.tipoBeca = tipoBeca;
         this.scholarshipId = scholarshipId;
         this.postulante = postulante;
     }

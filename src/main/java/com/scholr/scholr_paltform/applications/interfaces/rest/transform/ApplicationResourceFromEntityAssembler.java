@@ -9,7 +9,6 @@ public class ApplicationResourceFromEntityAssembler {
                 entity.getId(),
                 entity.getIdApoderado(),
                 entity.getStatus(),
-                //entity.getTipoBeca(),
                 entity.getScholarshipId(),
                 entity.getPostulante(),
                 entity.getPostulante_dni(),

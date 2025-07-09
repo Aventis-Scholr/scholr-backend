@@ -9,7 +9,6 @@ public class UpdateApplicationCommandFromResourceAssembler {
         return new UpdateApplicationCommand(
                 id,
                 resource.status(),
-                //resource.tipoBeca(),
                 scholarshipId,
                 new Postulante(
                         resource.postulante().getNombres(),
