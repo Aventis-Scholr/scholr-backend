@@ -171,7 +171,12 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
             throw new IllegalArgumentException("No applications found for apoderadoId: " + command.apoderadoId());
         }
 
-        applications.forEach(application -> application.setStatus(Status.RECHAZADO));
+        applications.stream()
+                .filter(application -> application.getStatus() == Status.PENDIENTE)
+                .forEach(application -> {
+                    application.setStatus(Status.RECHAZADO);
+                    application.setReporte(command.reporte());
+                });
 
         try {
             applicationRepository.saveAll(applications);
