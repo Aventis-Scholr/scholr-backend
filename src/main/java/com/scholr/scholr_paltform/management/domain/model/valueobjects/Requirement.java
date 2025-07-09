@@ -1,11 +1,7 @@
 package com.scholr.scholr_paltform.management.domain.model.valueobjects;
 
 import jakarta.persistence.Embeddable;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @Embeddable
 public class Requirement {
     private String name;
@@ -19,7 +15,6 @@ public class Requirement {
         this.description = description;
         this.isMandatory = isMandatory;
     }
-  
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
