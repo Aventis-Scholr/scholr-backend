@@ -234,9 +234,9 @@ public class ApplicationsController {
     }
 
     @PutMapping("/rejectAllApplicationsByApoderadoId/{apoderadoId}")
-    public ResponseEntity<Void> rejectAllApplicationsByApoderadoId(@PathVariable Long apoderadoId, @RequestBody String reporte) {
+    public ResponseEntity<Void> rejectAllApplicationsByApoderadoId(@PathVariable Long apoderadoId, @RequestBody UpdateReporteApplicationResource resource) {
         try {
-            var command = new RejectAllApplicationsByApoderadoId(apoderadoId, reporte);
+            var command = new RejectAllApplicationsByApoderadoId(apoderadoId, resource.reporte());
             applicationsCommandService.handle(command);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
