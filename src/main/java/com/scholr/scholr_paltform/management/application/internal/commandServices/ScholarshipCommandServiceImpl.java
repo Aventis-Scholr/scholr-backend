@@ -21,6 +21,12 @@ public class ScholarshipCommandServiceImpl implements ScholarshipCommandService 
     @Override
     public Optional<Scholarship> handle(CreateScholarshipCommand command) {
         // Crear una nueva beca a partir del comando
+
+        var existingScholarship = scholarshipRepository.findByName(command.name());
+        if (existingScholarship.isPresent()) {
+            throw new IllegalArgumentException("Scholarship with the same name already exists");
+        }
+
         var scholarship = new Scholarship(
                 command.name(),
                 command.companyName(),
