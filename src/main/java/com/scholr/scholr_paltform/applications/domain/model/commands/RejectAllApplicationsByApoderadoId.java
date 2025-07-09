@@ -1,4 +1,4 @@
 package com.scholr.scholr_paltform.applications.domain.model.commands;
 
-public record RejectAllApplicationsByApoderadoId(Long apoderadoId) {
+public record RejectAllApplicationsByApoderadoId(Long apoderadoId, String reporte) {
 }
