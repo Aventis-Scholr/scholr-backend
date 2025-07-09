@@ -10,7 +10,6 @@ public class CreateApplicationCommandFromResourceAssembler {
         return new CreateApplicationCommand(
                 apoderadoId,
                 resource.status(),
-                //resource.tipoBeca(),
                 scholarshipId,
                 resource.postulante()
         );
