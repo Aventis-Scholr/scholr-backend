@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.scholr.scholr_paltform.applications.domain.model.aggregates.Application;
 import com.scholr.scholr_paltform.applications.domain.model.commands.*;
 import com.scholr.scholr_paltform.applications.domain.model.entities.Postulante;
+import com.scholr.scholr_paltform.applications.domain.model.valueobjects.Status;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
 import com.scholr.scholr_paltform.applications.infrastructure.persistence.jpa.repositories.ApplicationRepository;
 import org.springframework.stereotype.Service;
@@ -158,6 +159,24 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
             return Optional.of(application);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error while updating report: " + e.getMessage());
+        }
+    }
+
+    //reject all applications by apoderado id
+
+    @Override
+    public void handle(RejectAllApplicationsByApoderadoId command) {
+        var applications = applicationRepository.findByIdApoderado(command.apoderadoId());
+        if (applications.isEmpty()) {
+            throw new IllegalArgumentException("No applications found for apoderadoId: " + command.apoderadoId());
+        }
+
+        applications.forEach(application -> application.setStatus(Status.RECHAZADO));
+
+        try {
+            applicationRepository.saveAll(applications);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error while rejecting applications: " + e.getMessage());
         }
     }
 

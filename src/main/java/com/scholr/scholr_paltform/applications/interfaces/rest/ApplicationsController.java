@@ -2,6 +2,7 @@ package com.scholr.scholr_paltform.applications.interfaces.rest;
 
 import com.scholr.scholr_paltform.applications.domain.model.aggregates.Application;
 import com.scholr.scholr_paltform.applications.domain.model.commands.DeleteApplicationCommand;
+import com.scholr.scholr_paltform.applications.domain.model.commands.RejectAllApplicationsByApoderadoId;
 import com.scholr.scholr_paltform.applications.domain.model.queries.*;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationCommandService;
 import com.scholr.scholr_paltform.applications.domain.services.ApplicationQueryService;
@@ -232,69 +233,15 @@ public class ApplicationsController {
         }
     }
 
-//    @PostMapping("/{idPostulacion}/dni")
-//    public ResponseEntity<?> subirDni(@PathVariable Long idPostulacion,
-//                                      @RequestParam("file") MultipartFile file) {
-//        try {
-//            String dniUrl = applicationsCommandService.handle(file);
-//
-//            var getApplicationByIdQuery = new GetApplicationByIdQuery(idPostulacion);
-//            Application application = applicationsQueryService.handle(getApplicationByIdQuery)
-//                    .orElseThrow(() -> new RuntimeException("No existe la postulación"));
-//
-//            /*var postulanteUpdate = application.getPostulante();
-//            postulanteUpdate.setDniFile(dniUrl);
-//
-//            application.setPostulante(postulanteUpdate);
-//
-//            postulacionRepository.save(postulacion);
-//            */
-//
-//            return ResponseEntity.ok().body(Map.of("dniUrl", dniUrl));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
-//        }
-//    }
-
-    //getApplicationById
-    /*
-    @GetMapping("/{id}")
-    public ResponseEntity<ApplicationResource> getApplicationById(@PathVariable Long id) {
-        var getApplicationByIdQuery = new GetApplicationByIdQuery(id);
-        var optionalApplication = this.applicationsQueryService.handle(getApplicationByIdQuery);
-        if (optionalApplication.isEmpty())
-            return ResponseEntity.badRequest().build();
-        var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
-        return ResponseEntity.ok(applicationResource);
-    }*/
-
-    /*@PostMapping
-    public ResponseEntity<ApplicationResource> createApplication(@RequestBody CreateApplicationResource resource) {
-        // Crear la aplicación
-        var createApplicationCommand = CreateApplicationCommandFromResourceAssembler.toCommandFromResource(resource);
-        var applicationId = this.applicationsCommandService.handle(createApplicationCommand);
-
-        if (applicationId.equals(0L)) {
-            return ResponseEntity.badRequest().build();
+    @PutMapping("/rejectAllApplicationsByApoderadoId/{apoderadoId}")
+    public ResponseEntity<Void> rejectAllApplicationsByApoderadoId(@PathVariable Long apoderadoId) {
+        try {
+            var command = new RejectAllApplicationsByApoderadoId(apoderadoId);
+            applicationsCommandService.handle(command);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        // Crear el postulante asociado
-        var createPostulanteCommand = new CreatePostulanteCommand(
-                resource.postulante().getNombres(),
-                resource.postulante().getApellidos(),
-                resource.postulante().getDni(),
-                resource.postulante().getFechaNacimiento(),
-                resource.postulante().getContacto(),
-                resource.postulante().getCentroEstudios()
-        );
-        this.applicationsCommandService.handle(createPostulanteCommand);
-
-        // Obtener la aplicación creada
-        var getApplicationByIdQuery = new GetApplicationByIdQuery(applicationId);
-        var optionalApplication = this.applicationsQueryService.handle(getApplicationByIdQuery);
-
-        var applicationResource = ApplicationResourceFromEntityAssembler.toResourceFromEntity(optionalApplication.get());
-        return new ResponseEntity<>(applicationResource, HttpStatus.CREATED);
-    }*/
+    }
 
 }
