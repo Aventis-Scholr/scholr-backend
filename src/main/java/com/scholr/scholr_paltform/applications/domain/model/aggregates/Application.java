@@ -38,6 +38,9 @@ public class Application extends AuditableAbstractAggregateRoot<Application> {
     private String postulante_libreta_notas;
     private String postulante_const_logro_aprendizaje;
 
+    //nuevo
+    private String reporte;
+
 
     public Application() {}
 

@@ -10,6 +10,7 @@ public interface ApplicationCommandService {
     Long handle(CreateApplicationCommand command);
     Optional<Application> handle(UpdateApplicationCommand command);
     Optional<Application> handle(UpdateStatusApplicationCommand command);
+    Optional<Application> handle(UpdateReporteApplicationCommand command);
     void handle(DeleteApplicationCommand command);
     String handle(MultipartFile file);
 

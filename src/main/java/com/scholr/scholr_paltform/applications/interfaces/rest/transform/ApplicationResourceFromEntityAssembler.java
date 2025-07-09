@@ -16,7 +16,8 @@ public class ApplicationResourceFromEntityAssembler {
                 entity.getPostulante_libreta_notas(),
                 entity.getPostulante_const_logro_aprendizaje(),
                 entity.getApoderado_dni(),
-                entity.getApoderado_declaracion_jurada()
+                entity.getApoderado_declaracion_jurada(),
+                entity.getReporte()
         );
     }
 
