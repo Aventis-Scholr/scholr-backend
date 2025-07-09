@@ -9,7 +9,6 @@ import java.util.Date;
 
 public record DataApoderadoResource(
         Long id,
-        Long apoderadoId,
         String nombres,
         String apellidos,
         int dni,
